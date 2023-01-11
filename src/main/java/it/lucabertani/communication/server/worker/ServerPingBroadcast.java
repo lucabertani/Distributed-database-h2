@@ -1,4 +1,4 @@
-package it.lucabertani.communication.server;
+package it.lucabertani.communication.server.worker;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -56,6 +56,8 @@ public class ServerPingBroadcast {
 					socket.setBroadcast(true);
 
 					byte[] buffer = broadcastMessage.getBytes();
+					
+					System.out.println("Send ping to " + address);
 
 					DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 4445);
 					socket.send(packet);

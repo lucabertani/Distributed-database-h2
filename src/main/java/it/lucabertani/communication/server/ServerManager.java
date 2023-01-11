@@ -13,12 +13,35 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.lucabertani.communication.server.worker.ServerListener;
+import it.lucabertani.communication.server.worker.ServerPingBroadcast;
+import it.lucabertani.communication.server.worker.ServerSocketWorker;
+import it.lucabertani.utils.Constants;
+
 public class ServerManager {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ServerManager.class);
 	
+	public void start() {
+		ServerListener.getInstance().start();
+	}
+	
+	public void stop() {
+		ServerListener.getInstance().stop();
+	}
+	
+	private static class SingletonHolder {
+        private static final ServerManager INSTANCE = new ServerManager();
+    }
+
+    public static ServerManager getInstance() {
+        return SingletonHolder.INSTANCE;
+    }
+	
+	
+	/*
 	private String serverAddress = null;
-	private int serverPort = -1;
+	private int serverPort = Constants.SERVER_PORT;
 	private int serverBacklog = -1;
 	private InetAddress serverInetAddress = null;
 	private int serverSocketReadTimeout = -1;
@@ -28,12 +51,13 @@ public class ServerManager {
 	private ThreadPoolExecutor threadPool;
 	
 	private Thread shutdownHook = null;
+	private ServerPingBroadcast serverPingBroadcast = null;
 	
 	private ServerManager() {
 		LOGGER.info("Reading socket properties...");
 		
 		this.serverAddress = "127.0.0.1"; //PropertiesManager.getInstance().readExternalProperty(Constants.PROP_SOCKET_ADDRESS);
-		this.serverPort = 6666; //PropertiesManager.getInstance().readExternalPropertyInt(Constants.PROP_SOCKET_PORT);
+		// this.serverPort = 6666; //PropertiesManager.getInstance().readExternalPropertyInt(Constants.PROP_SOCKET_PORT);
 		this.serverBacklog = 100; // PropertiesManager.getInstance().readExternalPropertyInt(Constants.PROP_SOCKET_BACKLOG);
 		
 		try {			
@@ -117,9 +141,6 @@ public class ServerManager {
 		LOGGER.info("Server stopped");
 	}
 	
-	/*private synchronized boolean isStarted() {
-		return started;
-	}*/
 
 	private synchronized boolean isStopped() {
 		return !started;
@@ -146,6 +167,15 @@ public class ServerManager {
 	}
 
 	
+	// PING broadcast
+	public void startBroadcast() {
+		if ( serverPingBroadcast == null ) {
+		}
+	}
+	
+	
+	
+	
 	
 
 	private static class SingletonHolder {
@@ -154,5 +184,5 @@ public class ServerManager {
 
     public static ServerManager getInstance() {
         return SingletonHolder.INSTANCE;
-    }
+    }*/
 }

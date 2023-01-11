@@ -1,4 +1,4 @@
-package it.lucabertani.communication.server;
+package it.lucabertani.communication.server.worker;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

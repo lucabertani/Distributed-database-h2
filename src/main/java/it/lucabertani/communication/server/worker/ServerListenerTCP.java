@@ -15,8 +15,8 @@ import org.slf4j.LoggerFactory;
 
 import it.lucabertani.utils.Constants;
 
-public class ServerListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ServerListener.class);
+public class ServerListenerTCP {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ServerListenerTCP.class);
 	
 	private final ServerListenerThread serverListenerThread;
 	
@@ -24,7 +24,7 @@ public class ServerListener {
 	
 	
 	
-	private ServerListener() {
+	private ServerListenerTCP() {
 		this.serverListenerThread = new ServerListenerThread();
 	}
 	
@@ -44,9 +44,9 @@ public class ServerListener {
 
 
 	private static class SingletonHolder {
-        private static final ServerListener INSTANCE = new ServerListener();
+        private static final ServerListenerTCP INSTANCE = new ServerListenerTCP();
     }
-    public static ServerListener getInstance() {
+    public static ServerListenerTCP getInstance() {
         return SingletonHolder.INSTANCE;
     }
     
@@ -56,8 +56,8 @@ public class ServerListener {
 		private ServerListenerThread() {
 			LOGGER.info("Reading socket properties...");
 			
-			// this.serverAddress = "127.0.0.1"; //PropertiesManager.getInstance().readExternalProperty(Constants.PROP_SOCKET_ADDRESS);
-			this.serverAddress = "192.168.1.170";
+			this.serverAddress = "127.0.0.1"; //PropertiesManager.getInstance().readExternalProperty(Constants.PROP_SOCKET_ADDRESS);
+			//this.serverAddress = "192.168.1.170";
 			// this.serverPort = 6666; //PropertiesManager.getInstance().readExternalPropertyInt(Constants.PROP_SOCKET_PORT);
 			this.serverBacklog = 100; // PropertiesManager.getInstance().readExternalPropertyInt(Constants.PROP_SOCKET_BACKLOG);
 			
@@ -128,7 +128,7 @@ public class ServerListener {
 				shutdownHook = new Thread() {
 		            @Override
 		            public void run() {
-		                ServerListener.getInstance().stop();
+		                ServerListenerTCP.getInstance().stop();
 		            }
 		        };
 		        
@@ -178,7 +178,7 @@ public class ServerListener {
 					throw new RuntimeException("Error accepting client connection", e);
 				}
 
-				threadPool.submit(ServerSocketWorker.createNewWorker(clientSocket, serverSocketReadTimeout));
+				threadPool.submit(ServerSocketTCPWorker.createNewWorker(clientSocket, serverSocketReadTimeout));
 			}
 			LOGGER.info("Server stopped");
 		}

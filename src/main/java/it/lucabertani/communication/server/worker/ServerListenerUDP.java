@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
@@ -56,8 +57,8 @@ public class ServerListenerUDP {
 		private ServerListenerThread() {
 			LOGGER.info("Reading socket properties...");
 			
-			// this.serverAddress = "127.0.0.1"; //PropertiesManager.getInstance().readExternalProperty(Constants.PROP_SOCKET_ADDRESS);
-			this.serverAddress = "192.168.1.170";
+			this.serverAddress = "127.0.0.1"; //PropertiesManager.getInstance().readExternalProperty(Constants.PROP_SOCKET_ADDRESS);
+			//this.serverAddress = "192.168.1.170";
 			// this.serverPort = 6666; //PropertiesManager.getInstance().readExternalPropertyInt(Constants.PROP_SOCKET_PORT);
 			this.serverBacklog = 100; // PropertiesManager.getInstance().readExternalPropertyInt(Constants.PROP_SOCKET_BACKLOG);
 			
@@ -121,7 +122,8 @@ public class ServerListenerUDP {
 				
 				// Join a multicast group
 		        InetAddress group = InetAddress.getByName(Constants.SERVER_MULTICAST_ADDRESS);
-		        serverSocket.joinGroup(group);
+		        // serverSocket.joinGroup(group);
+		        serverSocket.joinGroup(new InetSocketAddress(group, 0), null);
 			} catch (IOException e) {
 				String msg = "Cannot open socket at " + serverAddress + " for port " + serverPort + " with backlog " + serverBacklog;
 				LOGGER.error(msg, e);
@@ -190,6 +192,7 @@ public class ServerListenerUDP {
 					throw new RuntimeException("Error accepting client connection", e);
 				}
 
+				//TODO logica di consumo del pacchetto
 				// threadPool.submit(ServerSocketWorker.createNewWorker(clientSocket, serverSocketReadTimeout));
 			}
 			LOGGER.info("Server stopped");

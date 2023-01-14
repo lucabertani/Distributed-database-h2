@@ -10,19 +10,19 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ServerSocketWorker implements Runnable {
+public class ServerSocketTCPWorker implements Runnable {
 	
 	private static final byte BYTE_END = '\n';
-	private static final Logger LOGGER = LoggerFactory.getLogger(ServerSocketWorker.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ServerSocketTCPWorker.class);
 	
 	private Socket clientSocket = null;
 	private int serverSocketReadTimeout;
 	
-	public static ServerSocketWorker createNewWorker(Socket clientSocket, int serverSocketReadTimeout/*, String serverText*/) {
-		return new ServerSocketWorker(clientSocket, serverSocketReadTimeout/*, serverText*/);
+	public static ServerSocketTCPWorker createNewWorker(Socket clientSocket, int serverSocketReadTimeout/*, String serverText*/) {
+		return new ServerSocketTCPWorker(clientSocket, serverSocketReadTimeout/*, serverText*/);
 	}
 
-	public ServerSocketWorker(Socket clientSocket, int serverSocketReadTimeout/*, String serverText*/) {
+	public ServerSocketTCPWorker(Socket clientSocket, int serverSocketReadTimeout/*, String serverText*/) {
 		this.clientSocket = clientSocket;
 		this.serverSocketReadTimeout = serverSocketReadTimeout;
 	}

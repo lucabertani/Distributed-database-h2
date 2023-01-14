@@ -1,33 +1,27 @@
 package it.lucabertani.communication.server;
 
-import java.io.IOException;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.RejectedExecutionHandler;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.lucabertani.communication.server.worker.ServerListener;
-import it.lucabertani.communication.server.worker.ServerPingBroadcast;
-import it.lucabertani.communication.server.worker.ServerSocketWorker;
-import it.lucabertani.utils.Constants;
+import it.lucabertani.communication.server.worker.ServerListenerTCP;
+import it.lucabertani.communication.server.worker.ServerListenerUDP;
 
 public class ServerManager {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ServerManager.class);
 	
 	public void start() {
-		ServerListener.getInstance().start();
+		ServerListenerTCP.getInstance().start();
+		LOGGER.info("ServerListenerTCP start");
+		ServerListenerUDP.getInstance().start();
+		LOGGER.info("ServerListenerUDP start");
 	}
 	
 	public void stop() {
-		ServerListener.getInstance().stop();
+		ServerListenerTCP.getInstance().stop();
+		LOGGER.info("ServerListenerTCP start");
+		ServerListenerUDP.getInstance().stop();
+		LOGGER.info("ServerListenerUDP start");
 	}
 	
 	private static class SingletonHolder {

@@ -1,8 +1,7 @@
-package it.lucabertani.communication.server.worker;
+package it.lucabertani.communication.server.socket;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
@@ -14,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.lucabertani.communication.server.worker.ServerSocketUDPWorker;
 import it.lucabertani.utils.Constants;
 
 public class ServerListenerUDP {
@@ -54,6 +54,19 @@ public class ServerListenerUDP {
     
     private class ServerListenerThread implements Runnable {
 		
+		private String serverAddress = null;
+		private int serverPort = Constants.SERVER_PORT;
+		private int serverBacklog = -1;
+		//private InetAddress serverInetAddress = null;
+		//private int serverSocketReadTimeout = -1;
+		
+		//private ServerSocket serverSocket = null;
+		private MulticastSocket serverSocket = null;
+		private boolean started = false;
+		private ThreadPoolExecutor threadPool;
+		
+		private Thread shutdownHook = null;
+		
 		private ServerListenerThread() {
 			LOGGER.info("Reading socket properties...");
 			
@@ -62,13 +75,14 @@ public class ServerListenerUDP {
 			// this.serverPort = 6666; //PropertiesManager.getInstance().readExternalPropertyInt(Constants.PROP_SOCKET_PORT);
 			this.serverBacklog = 100; // PropertiesManager.getInstance().readExternalPropertyInt(Constants.PROP_SOCKET_BACKLOG);
 			
-			try {			
+			/*try {			
 				this.serverInetAddress = Inet4Address.getByName(this.serverAddress);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
 			
 			this.serverSocketReadTimeout = 60 * 1000; //PropertiesManager.getInstance().readExternalPropertyInt(Constants.PROP_SOCKET_READ_TIMEOUT) * 1000;
+			*/
 
 			LOGGER.info("Done!");
 			
@@ -95,19 +109,6 @@ public class ServerListenerUDP {
 			
 			LOGGER.info("Done!");
 		}
-		
-		private String serverAddress = null;
-		private int serverPort = Constants.SERVER_PORT;
-		private int serverBacklog = -1;
-		private InetAddress serverInetAddress = null;
-		private int serverSocketReadTimeout = -1;
-		
-		//private ServerSocket serverSocket = null;
-		private MulticastSocket serverSocket = null;
-		private boolean started = false;
-		private ThreadPoolExecutor threadPool;
-		
-		private Thread shutdownHook = null;
 
 		public void start() {
 			if ( started ) {
@@ -181,8 +182,10 @@ public class ServerListenerUDP {
 		            DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 		            serverSocket.receive(packet);
 		            
-		            String message = new String(packet.getData(), 0, packet.getLength());
-		            System.out.println("Received: " + message);
+		            threadPool.submit(ServerSocketUDPWorker.createNewWorker(packet));
+		            
+//		            String message = new String(packet.getData(), 0, packet.getLength());
+//		            System.out.println("Received: " + message);
 				
 				} catch (IOException e) {
 					if (isStopped()) {

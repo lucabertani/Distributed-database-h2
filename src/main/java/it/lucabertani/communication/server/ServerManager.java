@@ -3,8 +3,8 @@ package it.lucabertani.communication.server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.lucabertani.communication.server.worker.ServerListenerTCP;
-import it.lucabertani.communication.server.worker.ServerListenerUDP;
+import it.lucabertani.communication.server.socket.ServerListenerTCP;
+import it.lucabertani.communication.server.socket.ServerListenerUDP;
 
 public class ServerManager {
 	

@@ -3,13 +3,8 @@ package it.lucabertani.communication.server.worker;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Objects;
 
+import it.lucabertani.communication.model.PackagePing;
 import it.lucabertani.utils.Constants;
 
 public class ServerPingMulticast {
@@ -49,7 +44,7 @@ public class ServerPingMulticast {
 		}
 
 		public void pingBroadcast() {
-			String broadcastMessage = "hello world!";
+			//String broadcastMessage = "hello world!";
 
 			try {
 				/*List<InetAddress> addresses = listAllBroadcastAddresses();
@@ -68,7 +63,9 @@ public class ServerPingMulticast {
 				
 				MulticastSocket socket = new MulticastSocket(Constants.SERVER_PORT);
 				
-				byte[] buffer = broadcastMessage.getBytes();
+				PackagePing packagePing = new PackagePing("server1");
+				
+				byte[] buffer = packagePing.toJson().getBytes();
 				
 				System.out.println("Send ping to " + Constants.SERVER_MULTICAST_ADDRESS);
 				 
@@ -82,7 +79,7 @@ public class ServerPingMulticast {
 			}
 		}
 
-		private List<InetAddress> listAllBroadcastAddresses() throws SocketException {
+		/*private List<InetAddress> listAllBroadcastAddresses() throws SocketException {
 			List<InetAddress> broadcastList = new ArrayList<>();
 			Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
 
@@ -99,7 +96,7 @@ public class ServerPingMulticast {
 					.forEach(broadcastList::add);
 			}
 			return broadcastList;
-		}
+		}*/
 
 		public void stop() {
 			exit = true;

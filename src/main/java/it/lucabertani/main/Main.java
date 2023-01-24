@@ -1,11 +1,12 @@
 package it.lucabertani.main;
 
-import it.lucabertani.communication.ConnectionLayer;
+import java.util.Optional;
+
+import it.lucabertani.communication.model.Package;
+import it.lucabertani.communication.model.PackageFactory;
+import it.lucabertani.communication.model.PackagePing;
 import it.lucabertani.communication.server.ServerManager;
-import it.lucabertani.communication.server.worker.ServerListenerUDP;
-import it.lucabertani.communication.server.worker.ServerPingBroadcast;
 import it.lucabertani.communication.server.worker.ServerPingMulticast;
-import it.lucabertani.database.DatabaseServer;
 
 public class Main {
 
@@ -28,11 +29,20 @@ public class Main {
 		*/
 		// nc -l localhost 8888
 		// nc -l localhost 6666
+		// ServerPingBroadcast.getInstance().startPing();
 		
 		ServerManager.getInstance().start();
-		ServerListenerUDP.getInstance().start();
 		ServerPingMulticast.getInstance().startPing();
-		// ServerPingBroadcast.getInstance().startPing();
+		
+		/*PackagePing packagePing = new PackagePing("test123");
+		String json = packagePing.toJson();
+		System.out.println("json: " + json);
+		
+		Optional<Package> convertToPackage = PackageFactory.convertToPackage(json);
+		if ( convertToPackage.isPresent() ) {
+			Package p = convertToPackage.get();
+			System.out.println(p.getServerId() + " " + p.getType());
+		}*/
 		
 		try {
 			Thread.sleep(6000 * 1000);

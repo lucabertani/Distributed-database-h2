@@ -1,4 +1,4 @@
-package it.lucabertani.communication.server.worker;
+package it.lucabertani.communication.server.socket;
 
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.lucabertani.communication.server.worker.ServerSocketTCPWorker;
 import it.lucabertani.utils.Constants;
 
 public class ServerListenerTCP {
@@ -54,7 +55,7 @@ public class ServerListenerTCP {
     private class ServerListenerThread implements Runnable {
 		
 		private ServerListenerThread() {
-			LOGGER.info("Reading socket properties...");
+			LOGGER.info("Reading TCP socket properties...");
 			
 			this.serverAddress = "127.0.0.1"; //PropertiesManager.getInstance().readExternalProperty(Constants.PROP_SOCKET_ADDRESS);
 			//this.serverAddress = "192.168.1.170";
@@ -112,12 +113,12 @@ public class ServerListenerTCP {
 				return;
 			}
 			
-			LOGGER.info("Starting listening at " + serverAddress + ", port " + serverPort + " with backlog " + serverBacklog);
+			LOGGER.info("Starting listening TCP at " + serverAddress + ", port " + serverPort + " with backlog " + serverBacklog);
 			
 			try {
 				serverSocket = new ServerSocket(serverPort, serverBacklog, serverInetAddress);
 			} catch (IOException e) {
-				String msg = "Cannot open socket at " + serverAddress + " for port " + serverPort + " with backlog " + serverBacklog;
+				String msg = "Cannot open socket TCP at " + serverAddress + " for port " + serverPort + " with backlog " + serverBacklog;
 				LOGGER.error(msg, e);
 				throw new RuntimeException(msg, e);
 			}
@@ -172,7 +173,7 @@ public class ServerListenerTCP {
 					clientSocket = serverSocket.accept();
 				} catch (IOException e) {
 					if (isStopped()) {
-						LOGGER.info("Server stopped");
+						LOGGER.info("Server TCP stopped");
 						return;
 					}
 					throw new RuntimeException("Error accepting client connection", e);
@@ -180,7 +181,7 @@ public class ServerListenerTCP {
 
 				threadPool.submit(ServerSocketTCPWorker.createNewWorker(clientSocket, serverSocketReadTimeout));
 			}
-			LOGGER.info("Server stopped");
+			LOGGER.info("Server TCP stopped");
 		}
 		
 	}
